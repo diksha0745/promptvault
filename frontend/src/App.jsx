@@ -383,14 +383,18 @@ function App() {
   }
 
   async function runTest() {
+    if (activePrompt?.tool_tag !== "Claude") {
+      setConsoleOutput("Run Test is configured for Gemini prompts only. Select or create a Gemini prompt to call the Gemini API.");
+      return;
+    }
+
     setBusy("run");
     setConsoleOutput("");
     try {
-      const provider = activePrompt?.tool_tag === "Claude" ? "google" : "openai";
       const result = await api(`/prompts/${activePrompt.id}/run-test`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ variables, provider }),
+        body: JSON.stringify({ variables, provider: "google" }),
       });
       setConsoleOutput(`model: ${result.model}\n\n${result.response}`);
       loadData();
@@ -567,7 +571,7 @@ function App() {
                   <div className="rounded-md border border-slate-800 bg-slate-900 p-4">
                     <h2 className="mb-3 text-sm font-semibold">Compiled Prompt</h2>
                     <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap font-mono text-sm text-slate-300">{compiledPrompt}</pre>
-                    <button onClick={runTest} className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-indigo-500 text-sm font-semibold"><Play className="h-4 w-4" />Run Test</button>
+                    <button onClick={runTest} className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-indigo-500 text-sm font-semibold"><Play className="h-4 w-4" />Run Test with Gemini</button>
                   </div>
                   <pre className="min-h-[32rem] whitespace-pre-wrap rounded-md border border-slate-800 bg-black p-4 font-mono text-sm leading-6 text-emerald-200">{busy === "run" ? "Running..." : consoleOutput || "$ waiting for run"}</pre>
                 </div>
