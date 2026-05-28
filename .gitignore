@@ -1,5 +1,8 @@
 backend/.venv/
+backend/.venv311/
+backend/.env
 backend/promptvault.db
+backend/promptvault_pro.db
 backend/__pycache__/
 frontend/node_modules/
 frontend/dist/
